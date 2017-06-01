@@ -18,7 +18,7 @@ Il contient aussi toute sorte de librairie comme un router (flowRouter), un syst
 
 en conclusion il est parfait pour éviter la "js fatigue" donc éviter de se perdre les bafonds de npm.
 
-**React.js**
+**React.js**: Librairie javascript (front)
 
 Meteor propose un integration ultra simplifié de React, ici utilisé plus comme un moteur de template,
 L'avantage qu'a React c'est la virtualisation du dom et donc pouvoir integrer du javascript directement dans le dom.
