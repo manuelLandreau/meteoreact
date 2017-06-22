@@ -1,16 +1,13 @@
-import { Meteor } from 'meteor/meteor';
+import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createContainer } from 'meteor/react-meteor-data';
-import { Pizzas } from '../api/pizzas.js';
+import {connect} from 'react-redux';
+import {Pizzas} from '../../api/pizzas.js';
 
 class Edit extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            pizza: Pizzas.findOne({_id: this.props.id})
-        };
     }
 
     handleSubmit(event) {
@@ -53,15 +50,16 @@ class Edit extends React.Component {
     render() {
         return (
             <div className="container">
-                <button onClick={() => FlowRouter.go('/')}>Retour</button>
+                <button onClick={() => FlowRouter.go('/')}>back</button>
                 <hr/>
-                <form className="new-pizza" onSubmit={this.handleSubmit.bind(this)} onChange={this.handleChange.bind(this)}>
+                <form className="new-pizza" onSubmit={this.handleSubmit.bind(this)}
+                      onChange={this.handleChange.bind(this)}>
                     <h2>Ajouter une pizza</h2>
                     <input
                         type="text"
                         ref="textInput"
                         name="textInput"
-                        value={this.state.pizza.content.name}
+                        value={this.store.pizza.content.name}
                         placeholder="Nom de la pizza"
                     />
                     <input
@@ -74,37 +72,39 @@ class Edit extends React.Component {
                         type="text"
                         ref="textInput1"
                         name="textInput1"
-                        value={this.state.pizza.content.i1}
+                        value={this.store.pizza.content.i1}
                         placeholder="1er ingrédient"
                     />
                     <input
                         type="text"
                         ref="textInput2"
                         name="textInput2"
-                        value={this.state.pizza.content.i2}
+                        value={this.store.pizza.content.i2}
                         placeholder="2ème ingrédient"
                     />
                     <input
                         type="text"
                         ref="textInput3"
                         name="textInput3"
-                        value={this.state.pizza.content.i3}
+                        value={this.store.pizza.content.i3}
                         placeholder="3ème ingrédient"
                     />
                     <input
                         type="text"
                         ref="textInput4"
                         name="textInput4"
-                        value={this.state.pizza.content.i4}
+                        value={this.store.pizza.content.i4}
                         placeholder="4ème ingrédient"
                     />
-                    <button type="submit">Envoyer</button>
+                    <button type="submit">Send</button>
                 </form>
             </div>
         );
     }
 }
 
-export default createContainer(() => {
-    return {}
+export default connect(state => {
+    return {
+        pizza: Pizzas.findOne({_id: this.props.id})
+    }
 }, Edit);

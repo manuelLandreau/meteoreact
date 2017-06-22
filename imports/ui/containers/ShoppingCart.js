@@ -1,5 +1,4 @@
-import { Meteor } from 'meteor/meteor';
-import { Session } from 'meteor/session';
+import {Session} from 'meteor/session';
 import React from 'react';
 
 export default class ShoppingCart extends React.Component {

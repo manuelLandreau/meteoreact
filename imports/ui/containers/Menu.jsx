@@ -1,10 +1,11 @@
-import { Meteor } from 'meteor/meteor';
-import { Session } from 'meteor/session';
+import {Meteor} from 'meteor/meteor';
+import {Session} from 'meteor/session';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createContainer } from 'meteor/react-meteor-data';
-import { Pizzas } from '../api/pizzas.js';
+import {createContainer} from 'meteor/react-meteor-data';
+import {Pizzas} from '../../api/pizzas.js';
 import Pizza from './Pizza.jsx';
+import {List, Button} from 'semantic-ui-react';
 
 class Menu extends React.Component {
 
@@ -22,12 +23,6 @@ class Menu extends React.Component {
         if (!!Session.get('pizzas'))
             Session.get('pizzas').map(pizza => nb += parseInt(pizza.nb));
         return nb;
-    }
-
-    updatePizzaNb(pizza) {
-        this.setState({
-            nbPizza: this.state.nbPizza + parseInt(pizza.nb)
-        });
     }
 
     handleSubmit(event) {
@@ -62,37 +57,20 @@ class Menu extends React.Component {
 
     renderPizzas() {
         return this.props.pizzas.map((pizza) => (
-            <Pizza key={pizza._id} pizza={pizza} currentUser={!this.props.currentUser} updatePizzaNb={this.updatePizzaNb.bind(this)}/>
+            <Pizza key={pizza._id} pizza={pizza} currentUser={!this.props.currentUser}/>
         ));
     }
 
-    cancel() {
-        Session.set('pizzas', []);
-        this.setState({
-            pizzas: [],
-            nbPizza: 0
-        });
-    }
-
-
     render() {
         return (
-            <div className="container">
-                <div className="fr">
-                    {this.state.nbPizza > 0 && !this.props.currentUser ?
-                        <span>
-                            <button onClick={this.cancel.bind(this)} className="button-warning">Annuler</button>&nbsp;
-                            <button onClick={() => FlowRouter.go('/shoppingcart')} className="button-success">Valider ma commande ({this.state.nbPizza})</button>
-                        </span> : <strong>Panier vide</strong> }
-                </div>
-                <div className="clearfix mbm"></div>
-                <ul>
+            <div>
+                <List divided verticalAlign='middle' size={'big'}>
                     {this.renderPizzas()}
-                </ul>
+                </List>
                 { !!this.props.currentUser ?
-                    <button onClick={this.diplayForm.bind(this)}>Ajouter un nouvelle pizza</button> : ''}
+                    <Button onClick={this.diplayForm.bind(this)}>Ajouter un nouvelle pizza</Button> : ''}
                 { this.props.currentUser && this.state.displayForm ?
-                    <form className="new-pizza" onSubmit={this.handleSubmit.bind(this)} >
+                    <form className="new-pizza" onSubmit={this.handleSubmit.bind(this)}>
                         <h2>Ajouter une pizza</h2>
                         <input
                             type="text"
@@ -124,7 +102,7 @@ class Menu extends React.Component {
                             ref="textInput4"
                             placeholder="4ème ingrédient"
                         />
-                        <button type="submit">Envoyer</button>
+                        <Button type="submit">Envoyer</Button>
                     </form> : '' }
             </div>
         );
@@ -133,9 +111,9 @@ class Menu extends React.Component {
 
 export default createContainer(() => {
     Meteor.subscribe('pizzas');
-    Meteor.subscribe('nbPizza');
+    //Meteor.subscribe('nbPizza');
     return {
-        pizzas: Pizzas.find({}, { sort: { createdAt: -1 } }).fetch(),
+        pizzas: Pizzas.find({}, {sort: {createdAt: -1}}).fetch(),
         currentUser: Meteor.user(),
     };
 }, Menu);

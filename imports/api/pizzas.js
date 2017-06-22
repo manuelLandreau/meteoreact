@@ -1,6 +1,6 @@
-import { Meteor } from 'meteor/meteor';
-import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
+import {Meteor} from 'meteor/meteor';
+import {Mongo} from 'meteor/mongo';
+import {check} from 'meteor/check';
 
 export const Pizzas = new Mongo.Collection('pizzas');
 
@@ -9,9 +9,11 @@ if (Meteor.isServer) {
     Meteor.publish('pizzas', function tasksPublication() {
         return Pizzas.find();
     });
-    Meteor.publish('nbPizza', () => {
-        return Session.get('pizzas') || [];
-    });
+    // Meteor.publish('nbPizza', () => {
+    //     if (!!Session.get('pizzas'))
+    //         return Session.get('pizzas');
+    //     return 0;
+    // });
 }
 
 Meteor.methods({
@@ -19,7 +21,7 @@ Meteor.methods({
         check(content, Object);
 
         // Make sure the user is logged in before inserting a pizza
-        if (! Meteor.userId()) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
@@ -34,7 +36,7 @@ Meteor.methods({
         check(content, Object);
 
         // Make sure the user is logged in before inserting a pizza
-        if (! Meteor.userId()) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
@@ -54,6 +56,6 @@ Meteor.methods({
         check(pizzaId, String);
         check(setChecked, Boolean);
 
-        Pizzas.update(pizzaId, { $set: { checked: setChecked } });
+        Pizzas.update(pizzaId, {$set: {checked: setChecked}});
     },
 });

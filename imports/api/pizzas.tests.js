@@ -1,7 +1,7 @@
-import { Meteor } from 'meteor/meteor';
-import { Random } from 'meteor/random';
-import { Pizzas } from './pizzas';
-import { assert } from 'meteor/practicalmeteor:chai';
+import {Meteor} from 'meteor/meteor';
+import {Random} from 'meteor/random';
+import {Pizzas} from './pizzas';
+import {assert} from 'meteor/practicalmeteor:chai';
 
 if (Meteor.isServer) {
     describe('Pizzas', () => {
@@ -24,7 +24,7 @@ if (Meteor.isServer) {
                 const deletePizza = Meteor.server.method_handlers['pizzas.remove'];
 
                 // Set up a fake method invocation that looks like what the method expects
-                const invocation = { userId };
+                const invocation = {userId};
 
                 // Run the method with `this` set to the fake invocation
                 deletePizza.apply(invocation, [pizzaId]);
