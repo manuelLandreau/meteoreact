@@ -2,7 +2,7 @@ import React from 'react';
 
 const About = () => {
     return (
-        <div className="container">
+        <div>
             <p>Pizzeria La princesse et les deux moustachus</p>
             <p>2, rue de l'enfer</p>
             <p>44000 NANTES</p>

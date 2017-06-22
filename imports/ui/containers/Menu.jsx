@@ -6,6 +6,7 @@ import {createContainer} from 'meteor/react-meteor-data';
 import {Pizzas} from '../../api/pizzas.js';
 import Pizza from './Pizza.jsx';
 import {List, Button} from 'semantic-ui-react';
+import {updateTotal} from '../actions/actions';
 
 class Menu extends React.Component {
 
@@ -30,19 +31,19 @@ class Menu extends React.Component {
 
         // Find the text field via the React ref
         const name = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
-        const prix = ReactDOM.findDOMNode(this.refs.prix).value.trim();
+        const price = ReactDOM.findDOMNode(this.refs.price).value.trim();
         const i1 = ReactDOM.findDOMNode(this.refs.textInput1).value.trim();
         const i2 = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
         const i3 = ReactDOM.findDOMNode(this.refs.textInput3).value.trim();
         const i4 = ReactDOM.findDOMNode(this.refs.textInput4).value.trim();
 
-        const content = {name, prix, i1, i2, i3, i4};
+        const content = {name, price, i1, i2, i3, i4};
 
         Meteor.call('pizzas.insert', content);
 
         // Clear form
         ReactDOM.findDOMNode(this.refs.textInput).value = '';
-        ReactDOM.findDOMNode(this.refs.prix).value = '';
+        ReactDOM.findDOMNode(this.refs.price).value = '';
         ReactDOM.findDOMNode(this.refs.textInput1).value = '';
         ReactDOM.findDOMNode(this.refs.textInput2).value = '';
         ReactDOM.findDOMNode(this.refs.textInput3).value = '';
@@ -57,7 +58,7 @@ class Menu extends React.Component {
 
     renderPizzas() {
         return this.props.pizzas.map((pizza) => (
-            <Pizza key={pizza._id} pizza={pizza} currentUser={!this.props.currentUser}/>
+            <Pizza key={pizza._id} updateTotal={this.props.dispatch(updateTotal)} pizza={pizza} currentUser={!this.props.currentUser}/>
         ));
     }
 
@@ -68,41 +69,41 @@ class Menu extends React.Component {
                     {this.renderPizzas()}
                 </List>
                 { !!this.props.currentUser ?
-                    <Button onClick={this.diplayForm.bind(this)}>Ajouter un nouvelle pizza</Button> : ''}
+                    <Button onClick={this.diplayForm.bind(this)}>Add a new pizza</Button> : ''}
                 { this.props.currentUser && this.state.displayForm ?
-                    <form className="new-pizza" onSubmit={this.handleSubmit.bind(this)}>
+                    <form onSubmit={this.handleSubmit.bind(this)}>
                         <h2>Ajouter une pizza</h2>
                         <input
                             type="text"
                             ref="textInput"
-                            placeholder="Nom de la pizza"
+                            placeholder="Pizza name"
                         />
                         <input
                             type="text"
-                            ref="prix"
-                            placeholder="Prix de la pizza"
+                            ref="price"
+                            placeholder="Pizza price"
                         />
                         <input
                             type="text"
                             ref="textInput1"
-                            placeholder="1er ingrédient"
+                            placeholder="1st topping"
                         />
                         <input
                             type="text"
                             ref="textInput2"
-                            placeholder="2ème ingrédient"
+                            placeholder="2nd topping"
                         />
                         <input
                             type="text"
                             ref="textInput3"
-                            placeholder="3ème ingrédient"
+                            placeholder="3rd topping"
                         />
                         <input
                             type="text"
                             ref="textInput4"
-                            placeholder="4ème ingrédient"
+                            placeholder="4th topping"
                         />
-                        <Button type="submit">Envoyer</Button>
+                        <Button type="submit">Send</Button>
                     </form> : '' }
             </div>
         );
@@ -117,3 +118,4 @@ export default createContainer(() => {
         currentUser: Meteor.user(),
     };
 }, Menu);
+

@@ -17,7 +17,7 @@ export default class ShoppingCart extends React.Component {
 
     render() {
         return (
-            <div className="container">
+            <div>
                 <h4>ShoppingCart</h4>
                 <button onClick={() => FlowRouter.go('/')}>Retour</button>
                 <p>Recapitulatif : </p>

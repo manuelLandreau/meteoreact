@@ -1,9 +1,9 @@
 import {Meteor} from 'meteor/meteor';
 import {Session} from 'meteor/session';
 import React from 'react';
-import {connect} from 'react-redux';
 import {List, Button, Icon} from 'semantic-ui-react';
 import {updateTotal} from '../actions/actions';
+import {connect} from 'react-redux';
 
 class Pizza extends React.Component {
 
@@ -27,12 +27,12 @@ class Pizza extends React.Component {
         let pizza = {
             nb: event.target.nb.value,
             name: this.props.pizza.content.name,
-            prix: this.props.pizza.content.prix,
+            price: this.props.pizza.content.price,
         };
         Session.set({
             pizzas: [...Session.get('pizzas'), pizza]
         });
-        this.props.dispatch(updateTotal(this.props.pizza.content.prix));
+        this.props.dispatch(updateTotal(this.props.pizza.content.price));
     }
 
     render() {
@@ -68,7 +68,7 @@ class Pizza extends React.Component {
                         {this.props.pizza.content.name}&nbsp;
                     </strong>
                     {this.props.pizza.content.i1}&nbsp;{this.props.pizza.content.i2}&nbsp;{this.props.pizza.content.i3}&nbsp;{this.props.pizza.content.i4},
-                    <i>{this.props.pizza.content.prix} &euro;</i>
+                    <i>{this.props.pizza.content.price} &euro;</i>
                     { !this.props.currentUser ?
                         <span>&nbsp;indisponible ?&nbsp;
                             <input
@@ -83,8 +83,6 @@ class Pizza extends React.Component {
     }
 }
 
-export default connect(store => {
-        return {
-        }
-    }
-)(Pizza)
+export default connect(state => {
+    return {}
+})(Pizza);
