@@ -1,7 +1,7 @@
 ## Pizza boiler plate
 
 
-###Library
+### Library
 
 Meteor
 
@@ -20,7 +20,7 @@ SemanticUI
 meteor npm install && meteor
 `
 
-###To do :
+### To do :
 
 fix PropTypes warnings
 
