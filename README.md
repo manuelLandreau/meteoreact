@@ -24,9 +24,9 @@ meteor npm install && meteor
 
 fix PropTypes warnings
 
-Change local state syteme to redux-form for forms
+Change local state system to redux-form for forms
 
-Refactor acrchitecture
+Refactor architecture
 
 More tests
 
