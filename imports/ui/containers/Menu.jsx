@@ -6,7 +6,9 @@ import {createContainer} from 'meteor/react-meteor-data';
 import {Pizzas} from '../../api/pizzas.js';
 import Pizza from './Pizza.jsx';
 import {List, Button} from 'semantic-ui-react';
-import {updateTotal} from '../actions/actions';
+import * as actions from '../actions/actions';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 class Menu extends React.Component {
 
@@ -14,9 +16,7 @@ class Menu extends React.Component {
         super(props);
         this.state = {
             displayForm: false,
-            pizzas: Session.get('pizzas') || [],
-            nbPizza: this.diplayShoppingCard()
-        };
+        }
     }
 
     diplayShoppingCard() {
@@ -39,15 +39,15 @@ class Menu extends React.Component {
 
         const content = {name, price, i1, i2, i3, i4};
 
-        Meteor.call('pizzas.insert', content);
-
-        // Clear form
-        ReactDOM.findDOMNode(this.refs.textInput).value = '';
-        ReactDOM.findDOMNode(this.refs.price).value = '';
-        ReactDOM.findDOMNode(this.refs.textInput1).value = '';
-        ReactDOM.findDOMNode(this.refs.textInput2).value = '';
-        ReactDOM.findDOMNode(this.refs.textInput3).value = '';
-        ReactDOM.findDOMNode(this.refs.textInput4).value = '';
+        Meteor.call('pizzas.insert', content, () => {
+            // Clear form
+            ReactDOM.findDOMNode(this.refs.textInput).value = '';
+            ReactDOM.findDOMNode(this.refs.price).value = '';
+            ReactDOM.findDOMNode(this.refs.textInput1).value = '';
+            ReactDOM.findDOMNode(this.refs.textInput2).value = '';
+            ReactDOM.findDOMNode(this.refs.textInput3).value = '';
+            ReactDOM.findDOMNode(this.refs.textInput4).value = '';
+        });
     }
 
     diplayForm() {
@@ -58,8 +58,15 @@ class Menu extends React.Component {
 
     renderPizzas() {
         return this.props.pizzas.map((pizza) => (
-            <Pizza key={pizza._id} updateTotal={this.props.dispatch(updateTotal)} pizza={pizza} currentUser={!this.props.currentUser}/>
+            <Pizza key={pizza._id} updateTotal={this.props.actions.updateTotal} pizza={pizza} currentUser={!this.props.logged}/>
         ));
+    }
+
+    componentDidMount() {
+        Meteor.autorun(() => {
+            Meteor.subscribe('pizzas');
+            this.props.actions.fetchPizzas(Pizzas.find({}, {sort: {createdAt: -1}}).fetch());
+        });
     }
 
     render() {
@@ -68,9 +75,9 @@ class Menu extends React.Component {
                 <List divided verticalAlign='middle' size={'big'}>
                     {this.renderPizzas()}
                 </List>
-                { !!this.props.currentUser ?
+                { this.props.logged ?
                     <Button onClick={this.diplayForm.bind(this)}>Add a new pizza</Button> : ''}
-                { this.props.currentUser && this.state.displayForm ?
+                { this.props.logged && this.state.displayForm ?
                     <form onSubmit={this.handleSubmit.bind(this)}>
                         <h2>Ajouter une pizza</h2>
                         <input
@@ -110,12 +117,16 @@ class Menu extends React.Component {
     }
 }
 
-export default createContainer(() => {
-    Meteor.subscribe('pizzas');
-    //Meteor.subscribe('nbPizza');
+function mapStateToProps(state) {
     return {
-        pizzas: Pizzas.find({}, {sort: {createdAt: -1}}).fetch(),
-        currentUser: Meteor.user(),
+        pizzas: state.pizzas.pizzas,
+        currentUser: state.user.currentUser,
+        logged: !!state.user.logged
     };
-}, Menu);
+}
 
+function mapDispatchToProps(dispatch) {
+    return { actions: bindActionCreators(actions, dispatch) }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

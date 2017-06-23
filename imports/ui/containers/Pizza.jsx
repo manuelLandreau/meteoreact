@@ -2,10 +2,8 @@ import {Meteor} from 'meteor/meteor';
 import {Session} from 'meteor/session';
 import React from 'react';
 import {List, Button, Icon} from 'semantic-ui-react';
-import {updateTotal} from '../actions/actions';
-import {connect} from 'react-redux';
 
-class Pizza extends React.Component {
+export default class Pizza extends React.Component {
 
     constructor(props) {
         super(props);
@@ -32,7 +30,7 @@ class Pizza extends React.Component {
         Session.set({
             pizzas: [...Session.get('pizzas'), pizza]
         });
-        this.props.dispatch(updateTotal(this.props.pizza.content.price));
+        this.props.updateTotal(this.props.pizza.content.price);
     }
 
     render() {
@@ -82,7 +80,3 @@ class Pizza extends React.Component {
         );
     }
 }
-
-export default connect(state => {
-    return {}
-})(Pizza);

@@ -2,10 +2,11 @@ import React from 'react';
 import {Meteor} from 'meteor/meteor';
 import {Accounts} from 'meteor/std:accounts-semantic';
 import {Modal, Button} from 'semantic-ui-react';
-import {toggleModal, fetchUser} from '../actions/actions';
+import * as actions from '../actions/actions';
 import {connect} from 'react-redux';
 import UserMenu from '../components/UserMenu';
 import {createContainer} from 'meteor/react-meteor-data';
+import { bindActionCreators } from 'redux';
 
 class AccountsUIWrapper extends React.Component {
 
@@ -14,22 +15,22 @@ class AccountsUIWrapper extends React.Component {
     }
 
     showModal() {
-        this.props.dispatch(toggleModal(true));
+        this.props.actions.toggleModal(true);
     }
 
     closeModal() {
-        this.props.dispatch(toggleModal(false));
+        this.props.actions.toggleModal(false);
     }
 
     logout() {
         Meteor.logout();
-        this.props.dispatch({type: 'LOGOUT'});
+        this.props.actions.logout({type: 'LOGOUT'});
         FlowRouter.go('/');
     }
 
     componentDidMount() {
         Meteor.autorun(() => {
-            if (Meteor.user()) this.props.dispatch(fetchUser(Meteor.user()));
+            if (Meteor.user()) this.props.actions.fetchUser(Meteor.user());
         });
     }
 
@@ -49,11 +50,17 @@ class AccountsUIWrapper extends React.Component {
     }
 }
 
-export default connect(state => {
+function mapStateToProps(state) {
     return {
         isOpenModal: state.ui.isOpenModal,
         currentUser: state.user.currentUser,
         logged: state.user.logged
     }
-})(AccountsUIWrapper);
+}
+
+function mapDispatchToProps(dispatch) {
+    return { actions: bindActionCreators(actions, dispatch) }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountsUIWrapper)
 

@@ -6,9 +6,8 @@ export const Pizzas = new Mongo.Collection('pizzas');
 
 if (Meteor.isServer) {
     // This code only runs on the server
-    Meteor.publish('pizzas', function tasksPublication() {
-        return Pizzas.find();
-    });
+    Meteor.publish('pizzas', () => Pizzas.find());
+
     // Meteor.publish('nbPizza', () => {
     //     if (!!Session.get('pizzas'))
     //         return Session.get('pizzas');
@@ -20,7 +19,6 @@ Meteor.methods({
     'pizzas.insert'(content) {
         check(content, Object);
 
-        // Make sure the user is logged in before inserting a pizza
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
@@ -35,7 +33,6 @@ Meteor.methods({
     'pizzas.update'(content) {
         check(content, Object);
 
-        // Make sure the user is logged in before inserting a pizza
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
@@ -50,11 +47,19 @@ Meteor.methods({
     'pizzas.remove'(pizzaId) {
         check(pizzaId, String);
 
+        if (!Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
         Pizzas.remove(pizzaId);
     },
     'pizzas.setChecked'(pizzaId, setChecked) {
         check(pizzaId, String);
         check(setChecked, Boolean);
+
+        if (!Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
 
         Pizzas.update(pizzaId, {$set: {checked: setChecked}});
     },

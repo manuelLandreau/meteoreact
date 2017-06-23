@@ -20,19 +20,19 @@ export default class Edit extends React.Component {
         const i3 = ReactDOM.findDOMNode(this.refs.textInput3).value.trim();
         const i4 = ReactDOM.findDOMNode(this.refs.textInput4).value.trim();
 
-        const content = {_id: this.props.id, name, price, i1, i2, i3, i4};
+        const content = {_id: this.props.pizza._id, name, price, i1, i2, i3, i4};
 
-        Meteor.call('pizzas.update', content);
+        Meteor.call('pizzas.update', content, () => {
+            // Clear form
+            ReactDOM.findDOMNode(this.refs.textInput).value = '';
+            ReactDOM.findDOMNode(this.refs.price).value = '';
+            ReactDOM.findDOMNode(this.refs.textInput1).value = '';
+            ReactDOM.findDOMNode(this.refs.textInput2).value = '';
+            ReactDOM.findDOMNode(this.refs.textInput3).value = '';
+            ReactDOM.findDOMNode(this.refs.textInput4).value = '';
 
-        // Clear form
-        ReactDOM.findDOMNode(this.refs.textInput).value = '';
-        ReactDOM.findDOMNode(this.refs.price).value = '';
-        ReactDOM.findDOMNode(this.refs.textInput1).value = '';
-        ReactDOM.findDOMNode(this.refs.textInput2).value = '';
-        ReactDOM.findDOMNode(this.refs.textInput3).value = '';
-        ReactDOM.findDOMNode(this.refs.textInput4).value = '';
-
-        FlowRouter.go('/');
+            FlowRouter.go('/');
+        });
     }
 
     handleChange(event) {
@@ -58,42 +58,42 @@ export default class Edit extends React.Component {
                         type="text"
                         ref="textInput"
                         name="textInput"
-                        value={this.props.pizza.content.name}
+                        defaultValue={this.props.pizza.content.name}
                         placeholder="Nom de la pizza"
                     />
                     <input
                         type="text"
                         ref="price"
                         name="price"
-                        value={this.props.pizza.content.price}
+                        defaultValue={this.props.pizza.content.price}
                         placeholder="Prix de la pizza"
                     />
                     <input
                         type="text"
                         ref="textInput1"
                         name="textInput1"
-                        value={this.props.pizza.content.i1}
+                        defaultValue={this.props.pizza.content.i1}
                         placeholder="1er ingrédient"
                     />
                     <input
                         type="text"
                         ref="textInput2"
                         name="textInput2"
-                        value={this.props.pizza.content.i2}
+                        defaultValue={this.props.pizza.content.i2}
                         placeholder="2ème ingrédient"
                     />
                     <input
                         type="text"
                         ref="textInput3"
                         name="textInput3"
-                        value={this.props.pizza.content.i3}
+                        defaultValue={this.props.pizza.content.i3}
                         placeholder="3ème ingrédient"
                     />
                     <input
                         type="text"
                         ref="textInput4"
                         name="textInput4"
-                        value={this.props.pizza.content.i4}
+                        defaultValue={this.props.pizza.content.i4}
                         placeholder="4ème ingrédient"
                     />
                     <button type="submit">Send</button>
